@@ -105,14 +105,6 @@ int main(int argc, char * argv[])
       analysis.event(i);
       if (! isMC )
       {
-         if ( analysis.run() == 279975)
-         {
-            if ( prevFile == "" || prevFile != analysis.fileName() )
-            {
-               prevFile = analysis.fileName();
-               std::cout << prevFile << std::endl;
-            }
-         }
          if (!analysis.selectJson() ) continue; // To use only goodJSonFiles
       }
       
@@ -152,13 +144,18 @@ int main(int argc, char * argv[])
       
       ++nsel[2];
       
-      for ( int j1 = 0; j1 < 1; ++j1 )
+      // Delta R selection
+      for ( int j1 = 0; j1 < 3 - 1; ++j1 )
       {
-         const Jet & jet1 = *selectedJets[j1];
-         for ( int j2 = j1+1; j2 < 2; ++j2 )
+         const Jet& jet1 = *selectedJets[j1];
+         for ( int j2 = j1 + 1; j2 < 3; ++j2 )
          {
-            const Jet & jet2 = *selectedJets[j2];
-            if ( jet1.deltaR(jet2) < dRmin ) goodEvent = false;
+            const Jet& jet2 = *selectedJets[j2];
+            if ( jet1.deltaR(jet2) < dRmin )
+            {
+               goodEvent = false;
+               break;
+            }
          }
       }
       
@@ -166,6 +163,7 @@ int main(int argc, char * argv[])
       
       ++nsel[3];
       
+      //Delta eta selection - two leading jets
       if ( fabs(selectedJets[0]->eta() - selectedJets[1]->eta()) > detamax ) continue;
       
       ++nsel[4];
@@ -178,6 +176,7 @@ int main(int argc, char * argv[])
          ++njets;
       }
       
+      //fill histrograms and btag selection
       h1["n"] -> Fill(selectedJets.size());
       h1["n_ptmin20"] -> Fill(njets);
       for ( int j = 0; j < 3; ++j )
@@ -189,14 +188,15 @@ int main(int argc, char * argv[])
          h1[Form("btag_%i",j)] -> Fill(jet->btag());
          
          if ( j < 2 && jet->btag() < btagmin[j] )     goodEvent = false;
-//          if ( ! isbbb )
-//          {
-//             if ( j == 2 && jet->btag() > nonbtag )    goodEvent = false; 
-//          }
-//          else
-//          {
-//             if ( j == 2 && jet->btag() < btagmin[j] ) goodEvent = false; 
-//          }
+         
+         if ( ! isbbb )
+         {
+            if ( j == 2 && jet->btag() > nonbtag )    goodEvent = false; 
+         }
+         else
+         {
+            if ( j == 2 && jet->btag() < btagmin[j] ) goodEvent = false; 
+         }
       }
       
       h1["m12"] -> Fill((selectedJets[0]->p4() + selectedJets[1]->p4()).M());
@@ -304,10 +304,8 @@ int main(int argc, char * argv[])
       printf ("%-40s  %10d \n", triggerObjects[io].c_str(), nmatch[io] ); 
    }
    
-   
-   
-   
-      
-//    
+   // Efficiency
+   std::cout << std::endl;
+   std::cout << "Efficiency: " << (double)nsel[6] / analysis.size() << std::endl;
 }
 
