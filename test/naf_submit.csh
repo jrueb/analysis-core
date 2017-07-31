@@ -9,8 +9,8 @@ set rootfilelist = $1
 set macro = $2
 set nsplit = $3
 
-
-./split.csh $nsplit $rootfilelist
+set script_path = `dirname $0`
+$script_path/split.csh $nsplit $rootfilelist
 
 set files = `/bin/ls *_x???.txt`
 
@@ -28,7 +28,7 @@ foreach file ( $files )
    if ( -e ../json.txt ) then
       cp -p ../json.txt .
    endif
-   ../qsub.sh $macro
+   $script_path/qsub.sh $macro
    sleep 5
    cd -
 end
