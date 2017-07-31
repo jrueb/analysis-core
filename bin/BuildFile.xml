@@ -4,6 +4,7 @@
 <use name="rootmath"/>
 <use name="rootgraphics"/>
 <use name="boost" />
+<use name="boost_program_options" />
 <use name="Analysis/Core" />
 
 <bin   name="AnalysisEventInfo" file="AnalysisEventInfo.cc">
@@ -44,6 +45,10 @@
 
 <bin   name="SimpleAnalysis_4jets" file="SimpleAnalysis_4jets.cc">
 <flags   LDFLAGS="-lCore -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lz -pthread -lm -ldl -rdynamic"/>
+</bin>
+
+<bin   name="AnalyseHBB" file="AnalyseHBB.cc">
+<flags   LDFLAGS="-lCore -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lz -pthread -lm -ldl -lboost_program_options -rdynamic"/>
 </bin>
 
 <!--<bin   name="AnalysisTriggerObjects" file="AnalysisTriggerObjects.cc">
