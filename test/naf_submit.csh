@@ -19,7 +19,7 @@ foreach file ( $files )
    set counter = `basename $file .txt | awk -F "x" '{print $2}'`
    set exedir = "NAF_"$macro"_"$counter
    if ( -d $exedir ) then
-      echo "Similar jobs were already submitted. Move ot remove directories NAF_"$macro"_* and resubmit"
+      echo "Similar jobs were already submitted. Move or remove directories NAF_"$macro"_* and resubmit"
       exit
    endif
    mkdir -p $exedir
